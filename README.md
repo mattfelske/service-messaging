@@ -87,8 +87,6 @@ _If you have any issues building, deploying or accessing the application, please
 
 4. Launch the application
 > npm start
-or if you like pm2 ...
-> pm2 start --name <name>
   
 The application can be reached on http://localhost;8001, or online at http://test-jeragroup.ca:8001.
 _Please note that Chrome is netorious for redirecting to https, but Chrome still works in Incognito mode.
