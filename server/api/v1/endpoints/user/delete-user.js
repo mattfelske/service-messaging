@@ -2,29 +2,29 @@ var CM = require('../../../../db/mongo').ConnectionManager;
 const Utility = require('../../../../plugins/utilities');
 
 module.exports = (req, res) => {
-  var MESSAGE_ID  = req.query.id;
+  var USER_ID  = req.query.id;
 
-  if (!MESSAGE_ID) {
-    console.error('Missing message request parameter');
-    return res.status(400).json({ msg: 'Missing message request parameter' });
+  if (!USER_ID) {
+    console.error('Missing user request parameter');
+    return res.status(400).json({ msg: 'Missing user request parameter' });
   } else {
-    MESSAGE_ID = Utility.castToObjectId(MESSAGE_ID);
-    if (!MESSAGE_ID) {
-      console.error(`Invalid message object id [${req.query.id}]`);
-      return res.status(400).json({ msg: `Invalid message object id [${req.query.id}]` });
+    USER_ID = Utility.castToObjectId(USER_ID);
+    if (!USER_ID) {
+      console.error(`Invalid user object id [${req.query.id}]`);
+      return res.status(400).json({ msg: `Invalid user object id [${req.query.id}]` });
     }
   }
 
-  let query = { _id: MESSAGE_ID };
-  CM.connection.models.Message.findOneAndRemove(query, (err, removedMessage) => {
+  let query = { _id: USER_ID };
+  CM.connection.models.User.findOneAndRemove(query, (err, removedUser) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ msg: 'Error occured while removing the message' });
+      return res.status(500).json({ msg: 'Error occured while removing the user' });
     }
-    if (!removedMessage) {
-      console.error('Missing removed message');
-      return res.status(500).json({ msg: 'Missing removed message' });
+    if (!removedUser) {
+      console.error('Missing removed user');
+      return res.status(500).json({ msg: 'Missing removed user' });
     }
-    res.status(200).json(removedMessage);
+    res.status(200).json(removedUser);
   });
 };

@@ -11,9 +11,9 @@ module.exports = function(locals) {
   const API_V1 = require('./v1')(locals);
 
   router.get('/', (req, res, next) => {
-    res.sendFile(path.join(global.fileServeRoot, 'index.html'));
+    res.sendFile(path.join(global.fileServeRoot, 'app.html'));
   });
-  
+
   router.get('/hc', (req, res, next) => {
     res.status(200).end();
   });

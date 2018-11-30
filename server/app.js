@@ -163,26 +163,24 @@ function setupServer(callback) {
     genid:             () => { return uuid(); },
     cookie:            {
       httpOnly: true,
-      secure:   true,
-      sameSite: 'lax',
-      maxAge:   null // session does not expire
+      secure:   false,
+      sameSite: 'lax'
     },
     rolling: true,
-    secure:  true,
-    store:   new RedisStore()
+    secure:  false,
+    store:   new RedisStore({ host: 'localhost', port: 6379})
   }));
 
   // Setup application debugging.
   // app.use(morgan('combined'));
-  
+
   // Trace all incoming traffic.
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.originalUrl}`, (req.body) ? req.body : undefined);
     next();
   });
-  
+
   app.use((req, res, next) => {
-    // console.log(req.headers);
     // SESSION.read(req, (err, result) => {
     //   if (err) return console.error(err);
     //   if (!result || !result.userID) return warn('Not Authenticated');

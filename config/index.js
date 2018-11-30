@@ -39,7 +39,7 @@ module.exports = {
   authentication: {
     session: {
       life:   null,
-      secret: { default: '', format: String }
+      secret: 't3sts3cr3t'
     }
   }
 };
