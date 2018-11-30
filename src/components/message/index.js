@@ -59,14 +59,14 @@ class MESSAGE extends React.Component {
           />
 
           <Typography component="h3" style={{
-            'font-weight': 'bold',
-            'text-align': 'left',
-            'width': '50%',
-            'position': 'absolute',
-            top: '15px',
-            left: '60px',
-            'white-space': 'nowrap',
-            'overflow': 'hidden',
+            'font-weight':   'bold',
+            'text-align':    'left',
+            'width':         '50%',
+            'position':      'absolute',
+            top:             '15px',
+            left:            '60px',
+            'white-space':   'nowrap',
+            'overflow':      'hidden',
             'text-overflow': 'ellipsis'}}
           >
             {this.state.text}
