@@ -2,33 +2,33 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 
-import './index.css'
+import './index.css';
 
 class GIF extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: this.props.url,
-      loaded: false,
-      error: false,
+      url:        this.props.url,
+      loaded:     false,
+      error:      false,
       flavorText: 'Loading'
-    }
+    };
   }
   
   handleLoadEvent() {
-    console.log('GIF loaded')
+    console.log('GIF loaded');
     this.setState({
-      loaded: true,
+      loaded:     true,
       flavorText: ''
-    })
+    });
   }
   
   handleErrorEvent() {
-    console.error(new Error(`An error occured while loading a gif`), this.state.url);
+    console.error(new Error('An error occured while loading a gif'), this.state.url);
     this.setState({
-      error: true,
+      error:      true,
       flavorText: 'Error Occured '
-    })
+    });
   }
   
   render() {
@@ -44,7 +44,7 @@ class GIF extends React.Component {
           {this.state.flavorText}
         </Paper>
       </Grid>
-    )
+    );
   }
 }
 

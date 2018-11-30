@@ -65,16 +65,16 @@ async.waterfall([
   // Mongo database setup.
   (callback) => {
     // setupMongo((err, mongoCM) => {
-      // Initialize Mongo Database
-      // DB.on('connected', (uri) => {
-      //   info(`Connected to database ${uri}`);
-      // });
-      // DB.on('error', (err) => {
-      //   error(err);
-      // });
+    // Initialize Mongo Database
+    // DB.on('connected', (uri) => {
+    //   info(`Connected to database ${uri}`);
+    // });
+    // DB.on('error', (err) => {
+    //   error(err);
+    // });
 
     // });
-    callback()
+    callback();
   },
 
   // Redis database setup.
@@ -106,7 +106,7 @@ async.waterfall([
 
 ], (err, app, server) => {
   if (err) {
-    error(err);
+    console.error(err);
     process.exit(100);
   }
 
@@ -131,7 +131,7 @@ function setupServer(callback) {
   // app.locals.config = APP_CONFIG;
 
   // Check for local environment in order to setup webpack.
-  console.log('Environment', APP_CONFIG.env)
+  console.log('Environment', APP_CONFIG.env);
   if (APP_CONFIG.env === 'local') {
     console.log('Setting up webpack for a local deployment ...');
     let webpack           = require('webpack');
@@ -173,7 +173,7 @@ function setupServer(callback) {
   }));
 
   // Setup application debugging.
-  //app.use(morgan('combined'));
+  // app.use(morgan('combined'));
   
   // Trace all incoming traffic.
   app.use((req, res, next) => {
@@ -186,14 +186,14 @@ function setupServer(callback) {
     // SESSION.read(req, (err, result) => {
     //   if (err) return console.error(err);
     //   if (!result || !result.userID) return warn('Not Authenticated');
-    // 
+    //
     //   const USER_ID = result.userID;
     //   const PORTAL  = result.portal;
     //   const QUERY   = { 'userID': USER_ID };
     //   next();
-    // 
+    //
     // });
-    next()
+    next();
   });
 
   // Setup the routes.

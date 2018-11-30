@@ -38,7 +38,7 @@ module.exports = (sessionID, callback) => {
       return callback(new Error('Invalid Session'));
     }
 
-    CM.connection.models.User.findById({_id: userID}, (err, oneUser) => {
+    CM.connection.models.User.findById({ _id: userID }, (err, oneUser) => {
       if (err) {
         return callback(err);
       }

@@ -8,11 +8,11 @@ module.exports = (req, res) => {
   // TODO validate the request so that we do proper HTTP status codes.
   if (!BODY.text) {
     console.error('Missing text');
-    return res.status(400).json({msg: 'Missing text parameter'});
+    return res.status(400).json({ msg: 'Missing text parameter' });
   } else {
     if (typeof BODY.text !== 'string') {
       console.error('Invalid string');
-      return res.status(400).json({msg: 'Invalid parameter, expected string'});
+      return res.status(400).json({ msg: 'Invalid parameter, expected string' });
     }
   }
 

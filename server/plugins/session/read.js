@@ -39,7 +39,7 @@ module.exports = (req, callback) => {
     }
 
     if (!oneSession) {
-      error('Unable to find session for the given session id', `sess:${sessionID}`);
+      console.error('Unable to find session for the given session id', `sess:${sessionID}`);
       client.quit();
       return callback(null, null);
     }

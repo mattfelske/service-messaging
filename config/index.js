@@ -32,8 +32,8 @@ module.exports = {
   },
 
   application: {
-    name:      'messaging',
-    type:      'service'
+    name: 'messaging',
+    type: 'service'
   },
 
   authentication: {

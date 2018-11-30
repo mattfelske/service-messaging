@@ -9,31 +9,31 @@ module.exports = (req, res) => {
     return res.status(400).json({ msg: 'Missing request body' });
   }
   
-  var MESSAGE_ID = req.query.id;
+  var USER_ID = req.query.id;
   
-  if (!MESSAGE_ID) {
-    console.error('Missing message request parameter');
-    return res.status(400).json({ msg: 'Missing message request parameter' });
+  if (!USER_ID) {
+    console.error('Missing user request parameter');
+    return res.status(400).json({ msg: 'Missing user request parameter' });
   } else {
-    MESSAGE_ID = Utility.castToObjectId(MESSAGE_ID);
-    if (!MESSAGE_ID) {
-      console.error(`Invalid message object id [${req.query.id}]`);
-      return res.status(400).json({ msg: `Invalid message object id [${req.query.id}]` });
+    USER_ID = Utility.castToObjectId(USER_ID);
+    if (!USER_ID) {
+      console.error(`Invalid user object id [${req.query.id}]`);
+      return res.status(400).json({ msg: `Invalid user object id [${req.query.id}]` });
     }
   }
 
-  let query = { _id: MESSAGE_ID };
+  let query = { _id: USER_ID };
   let update = { $set: {} };
   let json = {};
 
-  if (req.body.text !== undefined) json.text = req.body.text;
+  if (req.body.name !== undefined) json.name = req.body.name;
   
   if (Object.keys(json).length === 0) {
     console.error('No Updates Required');
-    return res.status(400).json({msg: 'No updates required'});
+    return res.status(400).json({ msg: 'No updates required' });
   }
   
-  CM.connection.models.Message.findOneAndUpdate(query, update, { new: true }, (err, updatedMessage) => {
+  CM.connection.models.User.findOneAndUpdate(query, update, { new: true }, (err, updatedUser) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ msg: 'Error occured while updating the message' });

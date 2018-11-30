@@ -19,7 +19,7 @@
     "standard/no-callback-literal": 1,
 
     // Possible Errors
-    "no-console": 2,
+    "no-console": 1,
     "no-constant-condition": 2,
     "no-dupe-args": 2,
     "no-dupe-keys": 2,

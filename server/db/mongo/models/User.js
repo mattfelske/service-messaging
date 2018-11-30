@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 
 var userSchema = Schema({
-  name:         { type: String, default: '', trim: true },
+  name: { type: String, default: '', trim: true }
 }, {
   collection: 'users',
   timestamps: {

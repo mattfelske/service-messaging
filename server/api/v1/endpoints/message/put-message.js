@@ -30,7 +30,7 @@ module.exports = (req, res) => {
   
   if (Object.keys(json).length === 0) {
     console.error('No Updates Required');
-    return res.status(400).json({msg: 'No updates required'});
+    return res.status(400).json({ msg: 'No updates required' });
   }
   
   CM.connection.models.Message.findOneAndUpdate(query, update, { new: true }, (err, updatedMessage) => {
@@ -38,10 +38,10 @@ module.exports = (req, res) => {
       console.error(err);
       return res.status(500).json({ msg: 'Error occured while updating the message' });
     }
-    if (!updatedUser) {
+    if (!updatedMessage) {
       console.error('Missing updated message');
       return res.status(500).json({ msg: 'Missing updated message' });
     }
-    res.status(200).json(updatedUser);
+    res.status(200).json(updatedMessage);
   });
 };

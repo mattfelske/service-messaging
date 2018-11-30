@@ -8,7 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 
-import GIF from './components/gif'
+import GIF from './components/gif';
 
 import $ from 'jquery';
 
@@ -27,14 +27,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      error: false,
-      images: []
-    }
+      error:   false,
+      images:  []
+    };
     
     window.addEventListener('scroll', this.handleScroll);
     
     
-    console.log('Getting first batch of gifs')
+    console.log('Getting first batch of gifs');
     getGifs('ryan+gosling', currentOffset, (err, result) => {
       if (err) {
         console.error(err);
@@ -46,7 +46,7 @@ class App extends React.Component {
       result.data.map((elem) => newArray.push(elem.images.fixed_height_small.url));
       currentOffset += result.data.length;
       this.setState({
-        images: newArray,
+        images:  newArray,
         loading: false
       });
     });
@@ -58,7 +58,7 @@ class App extends React.Component {
       window.requestAnimationFrame(() => {
         // console.log('Need to add GIFS', needToAddGifs(currentScrollYOffset));
         if (needToAddGifs(currentScrollYOffset) && !this.state.loading) {
-          this.setState({loading: true})
+          this.setState({ loading: true });
           getGifs('ryan+gosling', currentOffset, (err, result) => {
             if (err) {
               console.error(err);
@@ -70,7 +70,7 @@ class App extends React.Component {
             result.data.map((elem) => newArray.push(elem.images.fixed_height_small.url));
             currentOffset += result.data.length;
             this.setState({
-              images: newArray,
+              images:  newArray,
               loading: false
             });
           });
@@ -86,7 +86,7 @@ class App extends React.Component {
     var gifs = this.state.images.map((url, index) => {
       return (
         <GIF key={index} url={url} />
-      )
+      );
     });
     
     return (
@@ -102,7 +102,7 @@ class App extends React.Component {
           {gifs}
         </Grid>
       </div>
-    )
+    );
   }
 }
 
@@ -119,7 +119,7 @@ var getGifs = (query, offset, callback) => {
   var xhr = $.get(`http://api.giphy.com/v1/gifs/search?q=${query}&api_key=${API_KEY}&limit=${QUERY_LIMIT}&offset=${currentOffset}`);
   xhr.done((data) => callback(null, data));
   xhr.fail((err) => callback(err));
-}
+};
 
 /**
  * Checks to see wether the user has scrolled far enough.
@@ -130,9 +130,9 @@ var needToAddGifs = () => {
     return true;
   }
   return false;
-}
+};
 
 ReactDOM.render(
   <App />,
   document.getElementById('root')
-)
+);

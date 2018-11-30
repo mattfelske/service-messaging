@@ -2,7 +2,7 @@
 const path     = require('path');
 const express  = require('express');
 const router   = express.Router();
-const APP_CONFIG = require('../../config')
+const APP_CONFIG = require('../../config');
 
 // Internal dependencies.
 module.exports = function(locals) {
