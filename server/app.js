@@ -16,11 +16,13 @@ const expressSession = require('express-session');
 const fs             = require('fs');
 const helmet         = require('helmet');
 const http           = require('http');
+const https           = require('https');
 const mongoose       = require('mongoose');
 mongoose.Promise = global.Promise;
 const morgan         = require('morgan');
 const os             = require('os');
 const path           = require('path');
+const redis          = require('redis');
 const RedisStore     = require('connect-redis')(expressSession);
 const request        = require('request');
 const uuid           = require('uuid/v4');
@@ -30,17 +32,7 @@ const APP_CONFIG     = require('../config');
 const ON_EXIT        = require('./functions/onexit');
 const ON_STARTUP     = require('./functions/onstartup');
 const SESSION        = require('./plugins/session');
-// const SETUP_MONGO    = require('./db/mongo').setup;
-// const SETUP_REDIS    = require('./db/redis').setup;
 const VERSION        = require('../package.json').version;
-
-var DB = require('./db/mongo/connection-manager');
-DB.on('connected', (uri) => {
-  console.log(`Connected to database ${uri}`);
-});
-DB.on('error', (err) => {
-  console.error(err);
-});
 
 console.log('\x1b[34m\x1b[1m************************************************************\x1b[0m'); // \x1b[0m, \x1b[36m\x1b[2m
 console.log('\x1b[34m\x1b[1m**                                                        **\x1b[0m');
@@ -53,6 +45,9 @@ console.log('');
 
 console.log(`Starting up the message management service version ${VERSION} ...`);
 
+var DB          = null;
+var redisClient = null;
+
 global.online = false;
 async.waterfall([
 
@@ -64,40 +59,44 @@ async.waterfall([
 
   // Mongo database setup.
   (callback) => {
-    // setupMongo((err, mongoCM) => {
-    // Initialize Mongo Database
-    // DB.on('connected', (uri) => {
-    //   info(`Connected to database ${uri}`);
-    // });
-    // DB.on('error', (err) => {
-    //   error(err);
-    // });
-
-    // });
-    callback();
+    // TODO rewrite this function and add setup logic
+    DB = require('./db/mongo/connection-manager');
+    DB.on('connected', (uri) => {
+      console.log(`Connected to database ${uri}`);
+    });
+    DB.on('error', (err) => {
+      console.error(err);
+    });
+    callback(null);
   },
 
   // Redis database setup.
-  // (mongoCM, callback) => {
   (callback) => {
+    // TODO rewrite this function and add setup logic
+    redisClient = redis.createClient({ 'host': APP_CONFIG.redis.domain, 'port': APP_CONFIG.redis.port });
+    redisClient.on('connect', () => console.log('Redis', 'CONNECTED'));
+    redisClient.on('end', () => console.log('Redis', 'END'));
+    redisClient.on('error', () => console.log('Redis', 'ERROR'));
+    redisClient.on('ready', () => console.log('Redis', 'READY'));
+    redisClient.on('reconnecting', () => console.log('Redis', 'RECONNECTING'));
+    redisClient.on('warning', () => console.log('Redis', 'WARNING'));
     callback(null);
-    // setupRedis(APP_CONFIG.redis, (err, redisCM) => {
-    //   callback(err, mongoCM, redisCM);
-    // });
   },
 
-  // Setup the server
-  // (mongoCM, redisCM, callback) => {
+  // Setup the HTTP/HTTPS server
   (callback) => {
     setupServer((err, app, server) => {
-      callback(err, app, server);
+      if (err) return callback(err);
+      callback(null, app, server);
     });
-    // setupServer(mongoCM, redisCM, (err, app, server) => {
-    //   callback(err, app, server);
-    // });
   },
 
-  // Perform any rerquired application startup.
+  // Setup socket.io connection
+  (app, server, callback) => {
+    callback(null, app, server);
+  },
+
+  // Perform any required application startup.
   (app, server, callback) => {
     ON_STARTUP(app.locals, (err) => {
       callback(err, app, server);
@@ -168,7 +167,7 @@ function setupServer(callback) {
     },
     rolling: true,
     secure:  false,
-    store:   new RedisStore({ host: 'localhost', port: 6379})
+    store:   new RedisStore({ client: redisClient})
   }));
 
   // Setup application debugging.
@@ -181,13 +180,12 @@ function setupServer(callback) {
   });
 
   app.use((req, res, next) => {
+    console.log(req.headers);
     // SESSION.read(req, (err, result) => {
     //   if (err) return console.error(err);
     //   if (!result || !result.userID) return warn('Not Authenticated');
     //
     //   const USER_ID = result.userID;
-    //   const PORTAL  = result.portal;
-    //   const QUERY   = { 'userID': USER_ID };
     //   next();
     //
     // });
@@ -227,8 +225,51 @@ function setupServer(callback) {
 
   // Create the HTTP or HTTPS server as determined by config data.
   var server;
-  console.log('Setting up HTTP server ...');
-  server = http.createServer(app);
+  if (APP_CONFIG.server.protocol === 'http') {
+    console.log('Setting up HTTP server ...');
+    server = http.createServer(app);
+  } else {
+    // Redirect from http port 80 to https.
+    console.log('Setting up HTTP server for redirect to HTTPS ...');
+    http.createServer(function (req, res) {
+      console.log('Redirecting to from HTTP to HTTPS ...');
+      res.writeHead(301, { 'Location': 'https://' + req.headers['host'] + req.url });
+      res.end();
+    }).listen(80);
+
+    // Get the security credentials.
+    console.log('Setting up security credentials ...');
+    const rKey    = fs.readFileSync(APP_CONFIG.security.ssl_certs.rKey);  // eslint-disable-line
+    const rCert   = fs.readFileSync(APP_CONFIG.security.ssl_certs.rCert); // eslint-disable-line
+    const rCA     = fs.readFileSync(APP_CONFIG.security.ssl_certs.rCA);   // eslint-disable-line
+    const OPTIONS = {
+      key:        rKey,
+      cert:       rCert,
+      ca:         rCA,
+      passphrase: APP_CONFIG.security.ssl_certs.passphrase,
+      ciphers:    [
+        'ECDHE-RSA-AES256-SHA384',
+        'DHE-RSA-AES256-SHA384',
+        'ECDHE-RSA-AES256-SHA256',
+        'DHE-RSA-AES256-SHA256',
+        'ECDHE-RSA-AES128-SHA256',
+        'DHE-RSA-AES128-SHA256',
+        'HIGH',
+        '!aNULL',
+        '!eNULL',
+        '!EXPORT',
+        '!DES',
+        '!RC4',
+        '!MD5',
+        '!PSK',
+        '!SRP',
+        '!CAMELLIA'
+      ].join(':'),
+      honorCipherOrder: true
+    };
+    console.log('Setting up HTTPS server ...');
+    server = https.createServer(OPTIONS, app);
+  }
 
   // Listen on the provided port, on all network interfaces.
   app.set('port', APP_CONFIG.server.port);

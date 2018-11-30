@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server/app.js",
     "build": "gulp",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "lint": "eslint . --quiet",
     "lint_fix": "eslint . --fix"
   },
@@ -52,6 +52,7 @@
     "morgan": "^1.9.1",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "redis": "^2.8.0",
     "request": "^2.81.0",
     "style-loader": "^0.23.1",
     "tracer": "^0.8.9",

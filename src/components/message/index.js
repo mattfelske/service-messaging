@@ -32,7 +32,7 @@ class MESSAGE extends React.Component {
     console.error(new Error('An error occured while loading the user image'));
     this.setState({
       error:      true,
-      flavorText: 'Error Occured '
+      flavorText: 'Error Occured'
     });
   }
 
