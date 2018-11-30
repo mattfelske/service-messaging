@@ -89,7 +89,8 @@ _If you have any issues building, deploying or accessing the application, please
 > npm start
   
 The application can be reached on http://localhost;8001, or online at http://test-jeragroup.ca:8001.
-_Please note that Chrome is netorious for redirecting to https, but Chrome still works in Incognito mode.
+
+**Please note that Chrome is notorious for redirecting to https, but Chrome still works in Incognito mode.**
 
 
 ### TO DOs
