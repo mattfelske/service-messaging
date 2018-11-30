@@ -10,6 +10,69 @@ _In order to test the application locally, you will need to have the following m
 3. MongoDB (3.4.9)
 4. Redis (3.2.100)
 
+
+### ARCHITECTURE
+The stack is based primarily on NodeJS for the backend, and React for the frontend. I also identified that in order to push update the client side dynamically, I would need to include Websockets, via socket.io, in order to push down new messages to all connected users.  I also wanted to find a way to track unique users, and the initial thought was to not go down the path of username/password, login email, etc. Instead I decided that through the use of sessions we could identifier new users, allows themself to create a "user account" for that particular session. I've done session management through using Redis, so it seemed like the simplest approach.
+
+![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/high-level-arch.png "High Level Architecture")
+
+
+In terms of tracking the messages, I decided that we were going to need two collection to start with.
+
+![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/uml.png "Database Collections")
+
+By tracking the User in the messages collection, we allow ourselves to query messages per user, and identify (in the future) who is allowed to delete which message.
+
+With regards to updating active users with message updates, we can acccomplish this by using the following examples.
+
+
+![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/seq-create.png "Creating Messages")
+
+![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/seq-del.png "Deleting Messages")
+
+
+### API ENDPOINTS
+
+> GET /v1/message?id
+```
+Parameters
++ id: optional. references the mongodb _id of the document.
+Returns
+200: [{Message}}]
+400: {msg: String}
+500: {msg: String}
+```
+> POST /v1/message
+```
+BODY
++ text: String A required field
+RETURNS
+201: {Message}
+400: {msg: String}
+500: {msg: String}
+```
+
+> PUT /v1/message
+```
+Parameters
++ id: required. references the mongodb _id of the document.
+Body
++ text: String A required field
+Returns
+200: {Message}
+400: {msg: String}
+500: {msg: String}
+```
+> DELETE /v1/message?id
+```
+Parameters
++ id: required. references the mongodb _id of the document.
+Returns
+200: {Message}
+400: {msg: String}
+500: {msg: String}
+```
+
 ### HOW TO
 _If you have any issues building, deploying or accessing the application, please reach out and let me konw. At this time the application will be running in developement mode. ._
 
@@ -27,8 +90,9 @@ _If you have any issues building, deploying or accessing the application, please
 or if you like pm2 ...
 > pm2 start --name <name>
   
-The application can be reached on http://localhost;8001.
+The application can be reached on http://localhost;8001, or online at http://test-jeragroup.ca:8001.
 _Please note that Chrome is netorious for redirecting to https, but Chrome still works in Incognito mode.
+
 
 ### TO DOs
 - [x] Allows users to submit/post messages
@@ -45,11 +109,7 @@ _Please note that Chrome is netorious for redirecting to https, but Chrome still
 - [ ] Containerize the application using Docker
 - [ ] Update configuration management to be dynamic based on environment.
 - [ ] Improve loggin implementation 
+- [ ] Front end implementation of user functionality
 
-### ARCHITECTURE
-The stack is based primarily on NodeJS for the backend, and React for the frontend. I also identified that in order to push update the client side dynamically, I would need to include Websockets, via socket.io, in order to push down new messages to all connected users.  I also wanted to find a way to track unique users, and the initial thought was to not go down the path of username/password, login email, etc. Instead I decided that through the use of sessions we could identifier new users, allows themself to create a "user account" for that particular session. I've done session management through using Redis, so it seemed like the simplest approach.
 
-In terms of tracking the messages, I decided that we were going to need two collection to start with.
-![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/default_user.png "Logo Title Text 1")
-By tracking the User in the messages collection, we allow ourselves to query messages per user, and identify (in the future) who is allowed to delete which message.
 
