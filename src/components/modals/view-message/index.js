@@ -20,21 +20,21 @@ function getModalStyle() {
 
 const styles = (theme) => ({
   paper: {
-    position:        'absolute',
-    width:           theme.spacing.unit * 50,
+    position: 'absolute',
+    width: theme.spacing.unit * 50,
     backgroundColor: theme.palette.background.paper,
-    boxShadow:       theme.shadows[5],
-    padding:         theme.spacing.unit * 4
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing.unit * 4,
   },
   textField: {
-    marginLeft:  theme.spacing.unit,
-    marginRight: theme.spacing.unit
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
   },
   button: {
-    margin:   theme.spacing.unit,
+    margin: theme.spacing.unit,
     position: 'absolute',
-    bottom:   '10px',
-    right:    '10px'
+    bottom: '10px',
+    right:  '10px'
   }
 });
 
@@ -51,6 +51,7 @@ class SimpleModal extends React.Component {
     const { classes } = this.props;
     const id = (this.state.msg) ? this.state.msg._id : null;
     console.log('Viewing message');
+    
     var created = '';
     var updated = '';
     var text = '';
