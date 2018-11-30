@@ -12,7 +12,7 @@ _In order to test the application locally, you will need to have the following m
 
 
 ### ARCHITECTURE
-The stack is based primarily on NodeJS for the backend, and React for the frontend. I also identified that in order to push update the client side dynamically, I would need to include Websockets, via socket.io, in order to push down new messages to all connected users.  I also wanted to find a way to track unique users, and the initial thought was to not go down the path of username/password, login email, etc. Instead I decided that through the use of sessions we could identifier new users, allows themself to create a "user account" for that particular session. I've done session management through using Redis, so it seemed like the simplest approach.
+The stack is based primarily on NodeJS for the backend, and React for the frontend. I also identified that in order to push updates to the client side dynamically, I would need to include Websockets, via socket.io, in order to push down new messages to all connected users.  I also wanted to find a way to track unique users, and the initial thought was to not go down the path of username/password, login email, etc. Instead I decided that through the use of sessions we could identifier new users, allows themself to create a "user account" for that particular session. I've done session management through using Redis, so it seemed like the simplest approach.
 
 ![alt text](https://github.com/mattfelske/service-messaging/blob/master/public/img/high-level-arch.png "High Level Architecture")
 
@@ -74,7 +74,7 @@ Returns
 ```
 
 ### HOW TO
-_If you have any issues building, deploying or accessing the application, please reach out and let me konw. At this time the application will be running in developement mode. ._
+_If you have any issues building, deploying or accessing the application, please reach out and let me konw. At this time the application will be running in developement mode._
 
 1. Download the repository
 > git clone https://github.com/mattfelske/service-messaging.git
@@ -90,7 +90,7 @@ _If you have any issues building, deploying or accessing the application, please
   
 The application can be reached on http://localhost;8001, or online at http://test-jeragroup.ca:8001.
 
-**Please note that Chrome is notorious for redirecting to https, but Chrome still works in Incognito mode.**
+**Please note that Chrome is notorious for redirecting to https, but the application still works in Incognito mode.**
 
 
 ### TO DOs
