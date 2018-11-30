@@ -1,0 +1,22 @@
+# Dependency directory
+node_modules
+
+# IDE Project Files
+.project
+
+# MAC DS_Stores
+.DS_Store
+
+# Ignore npm log files
+npm-debug.log**
+
+# Ignore local environment override config file
+override-env.json
+
+# Ignore package-lock file
+package-lock.json
+
+# Public Built Distributable Directory
+/public/dist/*
+
+.vscode/*
