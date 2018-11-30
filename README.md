@@ -88,7 +88,7 @@ _If you have any issues building, deploying or accessing the application, please
 4. Launch the application
 > npm start
   
-The application can be reached on http://localhost;8001, or online at http://test-jeragroup.ca:8001.
+The application can be reached on http://localhost:8001, or online at http://test-jeragroup.ca:8001.
 
 **Please note that Chrome is notorious for redirecting to https, but the application still works in Incognito mode.**
 
